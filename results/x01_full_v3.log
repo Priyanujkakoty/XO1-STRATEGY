@@ -1,0 +1,16 @@
+eurusd    1067 trades
+gbpusd    1185 trades
+usdjpy     669 trades
+gbpjpy     910 trades
+audusd     744 trades
+eurjpy     859 trades
+
+exits: {'stop': 2989, 'time': 1039, 'target': 1406}
+gross avg +0.961R  median -1.00R  max +16.2R  WR 43.9%
+X01 full history 6 pairs     FAIL  n= 5434 20.0y 0.74/d exp=+0.703R PF=2.00 dd90= 26.4R risk= 0.19% need=    113tr     7mo cost= 26.9%
+                               - rate 0.74/day < 2.00/day
+                               - dd90 26.4R > 25.0R
+                               - cost 27% of gross > 25%
+  - rate 0.74/day < 2.00/day
+  - dd90 26.4R > 25.0R
+  - cost 27% of gross > 25%

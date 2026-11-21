@@ -1,0 +1,20 @@
+ledger: 5434 trades, net +0.703R, maxLL 19, adverse p50 1.03R p90 1.83R
+
+risk    P1pass  P2pass  overall  survive  hist_breach  trail_x  daily_x  med_trades  med_days  attempts
+-------------------------------------------------------------------------------------------------------
+ 0.10%   100.0%   100.0%   100.0%  PASS           0.0%    0.30x    0.14x         205        277     1.00
+ 0.25%    99.9%   100.0%    99.9%  PASS           0.0%    0.71x    0.36x          82        111     1.00
+ 0.50%    96.5%    98.4%    94.9%  FAIL           7.0%    1.07x    0.71x          41         55     1.05
+ 0.75%    89.9%    94.8%    85.3%  FAIL          17.5%    1.09x    1.06x          26         35     1.17
+ 1.00%    80.4%    89.5%    72.0%  FAIL          28.5%    1.14x    1.41x          17         23     1.39
+ 1.50%    65.6%    78.5%    51.5%  FAIL          49.8%    1.20x    1.68x           9         12     1.94
+ 2.00%    52.2%    65.9%    34.4%  FAIL          64.8%    1.25x    1.88x           5          7     2.91
+
+Historical hard-limit detail (worst window of 400)
+  risk  0.10%  worst trailing  3.02% of account (limit 10%, 0.30x)   worst day  0.72% (limit 5%, 0.14x)
+  risk  0.25%  worst trailing  7.10% of account (limit 10%, 0.71x)   worst day  1.80% (limit 5%, 0.36x)
+  risk  0.50%  worst trailing 10.66% of account (limit 10%, 1.07x)   worst day  3.57% (limit 5%, 0.71x)
+  risk  0.75%  worst trailing 10.95% of account (limit 10%, 1.09x)   worst day  5.32% (limit 5%, 1.06x)
+  risk  1.00%  worst trailing 11.40% of account (limit 10%, 1.14x)   worst day  7.05% (limit 5%, 1.41x)
+  risk  1.50%  worst trailing 12.04% of account (limit 10%, 1.20x)   worst day  8.38% (limit 5%, 1.68x)
+  risk  2.00%  worst trailing 12.51% of account (limit 10%, 1.25x)   worst day  9.41% (limit 5%, 1.88x)

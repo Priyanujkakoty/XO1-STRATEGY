@@ -74,6 +74,75 @@ removing the best 10% leaves +0.110R (PF 1.14).
 Cost stress: doubling the spread and adding 1 pip of slippage leaves +0.238R
 (PF 1.24).
 
+## Costs, per trade
+
+Every figure above is net of spread, slippage and commission. The cost is
+charged in R through the stop width:
+
+```python
+sp = R / pip
+cost = (SPREAD[pair] + SLIP) / sp + COMM / (sp * PIPVAL[pair])
+```
+
+| pair | spread (pips) | median stop | cost per trade |
+|---|---|---|---|
+| EURUSD | 0.5 | 6.3 | 0.195R |
+| GBPUSD | 0.9 | 7.3 | 0.225R |
+| AUDUSD | 0.7 | 5.8 | 0.249R |
+| USDJPY | 0.6 | 6.1 | 0.262R |
+| EURJPY | 1.2 | 8.0 | 0.276R |
+| GBPJPY | 2.5 | 10.0 | 0.364R |
+
+Slippage is a flat 0.2 pips, commission is $5 per standard lot round turn.
+Positions close by 07:00 New York the same day, so no swap is charged. The
+spread is static; news widening is covered only by the x2 stress row.
+
+## Funded-account economics (MONEYCHECK)
+
+Rules: $5,000 2-Step Pro, +10% then +5%, 5% daily loss, 10% trailing total
+loss, $15 challenge fee, no activation fee, 80% split, 14-day payout cycle,
+consistency rule requires the highest profit day to stay under 50% of the
+payout-period profit, and three funded days with at least 0.5% profit each.
+A consistency failure delays the payout; it does not breach the account.
+
+Challenge phase, 50,000 paths, each risk level simulated on its own:
+
+| risk | P1 | P2 | both | historical breach | worst trailing |
+|---|---|---|---|---|---|
+| 0.10% | 100.0% | 100.0% | 100.0% | 0.0% | 0.30x |
+| 0.25% | 99.9% | 100.0% | 99.9% | 0.0% | 0.71x |
+| 0.30% | 99.5% | 99.7% | 99.5% | 0.0% | 0.85x |
+| 0.35% | 98.8% | 99.4% | 98.8% | 0.0% | 1.00x |
+| 0.40% | — | — | — | 4.0% | 1.05x |
+| 0.50% | 96.5% | 98.4% | 94.9% | 7.0% | 1.07x |
+| 1.00% | 80.4% | 89.5% | 72.0% | 28.5% | 1.14x |
+| 2.00% | 52.2% | 65.9% | 34.4% | 64.8% | 1.25x |
+
+"Historical breach" is 400 fresh $5,000 windows replayed in real trade order.
+A configuration that breached there is rejected regardless of its simulated
+pass rate, so the usable ceiling is 0.35%.
+
+Funded phase, 2 years, 20,000 paths:
+
+| risk | reach first payout | E[net cash] realistic | conservative |
+|---|---|---|---|
+| 0.25% | 100.0% | $3,820 | $2,967 |
+| 0.30% | 99.9% | $4,598 | $3,507 |
+| 0.35% | 99.7% | $5,325 | $3,930 |
+| 1.00% | 63.7% | $1,886 | $1,027 |
+
+Recommended configuration: **0.30% risk ($15 per trade) in both phases** —
+99.5% challenge pass in a median 69 trades (~93 days), 99.9% of funded accounts
+reaching a first payout in a median 42 more days, worst historical drawdown
+8.53% against the 10% limit.
+
+Assumptions that are not in the published rules: no minimum payout (any
+positive profit withdrawable), payout resets balance and trailing peak to
+$5,000, trailing peak tracked on closed balance rather than intraday equity,
+and the 20-year edge persisting. The page states a 90% standard split; 80% is
+used here because that is the account's actual split.
+
+
 ## Verdict against a funded-account screen
 
 The screen (`prop_screen.py`) models an account that must make +15% while
@@ -118,6 +187,8 @@ export M5_DIR=/path/to/csv            # Windows: set M5_DIR=...
 python x01_asian_mss.py               # full history, six pairs
 python x01_asian_mss.py --years=2     # last two years only
 python x01_robust.py                  # tail, per-pair, per-year, cost stress
+python x01_prop.py --paths=50000      # challenge-phase pass probability
+python x01_funded.py --risk=0.003     # funded-phase payouts and net cash
 python prop_screen.py                 # screen arithmetic on a synthetic ledger
 python prop_screen.py --csv ledger.csv
 ```
@@ -131,9 +202,12 @@ instead of recomputing finished pairs.
 |---|---|
 | `x01_asian_mss.py` | session windows, sweep, MSS, FVG, orderblock, limit fill, management |
 | `x01_robust.py` | tail removal, per pair, per year, spread and slippage stress |
-| `prop_screen.py` | account-level acceptance arithmetic and gates |
+| `x01_prop.py` | challenge-phase pass probability and historical breach check |
+| `x01_funded.py` | funded payout schedule, consistency rule, net cash flow |
+| `account_sim.py` | challenge replay and block-bootstrap account simulation |
+| `prop_screen.py` | acceptance arithmetic and gates |
 | `data.py` | validated CSV loader, pip size, costs |
-| `results/` | console output of the full-history run and the robustness run |
+| `results/` | console output of every recorded run |
 
 ## Limitations
 

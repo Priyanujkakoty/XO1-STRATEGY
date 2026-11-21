@@ -1,0 +1,21 @@
+7307 calendar days, 5434 trades, 0.74 trades/day
+
+=== realistic: risk 0.35%, shift +0.00R, 20000 paths, 2 years ===
+  reached first payout        99.7%
+  failed before 1st payout     0.3%
+  median days to 1st payout     42
+  payouts per account        13.99
+  E[gross payout]           $ 5339.85
+  E[net cash] after $15 fee   $ 5324.85
+  cycles blocked by 50%/3d   29.00
+  payout p10/p50/p90        $4052 / $5402 / $6734
+
+=== conservative (cost +0.15R): risk 0.35%, shift -0.15R, 20000 paths, 2 years ===
+  reached first payout        98.2%
+  failed before 1st payout     1.8%
+  median days to 1st payout     56
+  payouts per account        10.29
+  E[gross payout]           $ 3945.36
+  E[net cash] after $15 fee   $ 3930.36
+  cycles blocked by 50%/3d   27.41
+  payout p10/p50/p90        $2284 / $4160 / $5498

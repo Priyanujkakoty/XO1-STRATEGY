@@ -189,9 +189,18 @@ def one_pair(pair, years):
         if filled is None:
             continue
 
-        # management, stop before target inside a bar
+        # management, stop before target inside a bar. Track the worst floating
+        # excursion while the position is open: the daily-loss rule is measured
+        # on equity, not on closed trades.
         exit_px, why = float(c[end]), "time"
+        adv = mfe = 0.0
         for k in range(filled, end + 1):
+            if bull:
+                adv = max(adv, (entry - l[k]) / R)
+                mfe = max(mfe, (h[k] - entry) / R)
+            else:
+                adv = max(adv, (h[k] - entry) / R)
+                mfe = max(mfe, (entry - l[k]) / R)
             hit_sl = l[k] <= stop if bull else h[k] >= stop
             hit_tp = h[k] >= target if bull else l[k] <= target
             if hit_sl:
@@ -205,8 +214,8 @@ def one_pair(pair, years):
         sp = R / pip
         cost = (SPREAD[pair] + SLIP) / sp + COMM / (sp * PIPVAL[pair])
         rows.append(dict(ts=int(ms[filled]), pair=pair, r=r - cost, gross=r,
-                         adverse=1.0 if r < 0 else 0.0, why=why,
-                         stop=sp, bars=settle, mfe=0.0))
+                         adverse=float(min(max(adv, 0.0), 3.0)), why=why,
+                         stop=sp, bars=settle, mfe=float(max(mfe, 0.0))))
     return rows
 
 
