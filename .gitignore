@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+x01_*_full.json
+x01_*_[0-9]y.json
+market_data/
